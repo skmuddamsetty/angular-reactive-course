@@ -40,6 +40,10 @@ export class HomeComponent implements OnInit {
     //     (course) => course.category == "ADVANCED"
     //   );
     // });
+    this.reloadCourses();
+  }
+
+  reloadCourses() {
     const courses$ = this.coursesService
       .loadAllCourses()
       .pipe(map((courses) => courses.sort(sortCoursesBySeqNo)));
