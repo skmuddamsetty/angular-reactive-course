@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit {
     const courses$ = this.coursesService
       .loadAllCourses()
       .pipe(map((courses) => courses.sort(sortCoursesBySeqNo)));
+
     this.beginnerCourses$ = courses$.pipe(
       // returning new observable which contains the data with beginner courses using the map operator
       map((courses) =>
