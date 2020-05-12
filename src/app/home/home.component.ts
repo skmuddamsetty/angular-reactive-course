@@ -23,9 +23,9 @@ import { CoursesService } from "../services/courses.service";
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
-  beginnerCourses: Course[];
+  beginnerCourses$: Observable<Course[]>;
 
-  advancedCourses: Course[];
+  advancedCourses$: Observable<Course[]>;
 
   constructor(
     private dialog: MatDialog,
@@ -43,6 +43,20 @@ export class HomeComponent implements OnInit {
     //     (course) => course.category == "ADVANCED"
     //   );
     // });
+    const courses$ = this.coursesService
+      .loadAllCourses()
+      .pipe(map((courses) => courses.sort(sortCoursesBySeqNo)));
+    this.beginnerCourses$ = courses$.pipe(
+      // returning new observable which contains the data with beginner courses using the map operator
+      map((courses) =>
+        courses.filter((course) => course.category === "BEGINNER")
+      )
+    );
+    this.advancedCourses$ = courses$.pipe(
+      map((courses) =>
+        courses.filter((course) => course.category === "ADVANCED")
+      )
+    );
   }
 
   editCourse(course: Course) {
