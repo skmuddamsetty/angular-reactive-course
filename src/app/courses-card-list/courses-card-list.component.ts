@@ -34,6 +34,7 @@ export class CoursesCardListComponent implements OnInit {
         // added this filter because there are two scenarios the user can trigger this when the modal is opened i.e either by clicking edit or save
         // when the edit is clicked the incoming value from the close event is empty and if it is empty we do not want to run the tap operator that is the side effect of emitting the event
         // but when this event is triggered after save, the value will not be empty, so the tap operator gets executed.
+        // filter is like road block to the next step. observable chain proceeds to teh next step only if the filter is true
         filter((val) => !!val),
         // using the tap operator to cause the side effect of emitting the output event
         tap(() => this.coursesChanged.emit())
