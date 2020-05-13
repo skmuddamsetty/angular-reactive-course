@@ -20,6 +20,7 @@ import { LoadingService } from "../loading/loading.service";
   selector: "course-dialog",
   templateUrl: "./course-dialog.component.html",
   styleUrls: ["./course-dialog.component.css"],
+  providers: [LoadingService],
 })
 export class CourseDialogComponent implements AfterViewInit {
   form: FormGroup;
@@ -45,11 +46,21 @@ export class CourseDialogComponent implements AfterViewInit {
 
   ngAfterViewInit() {}
 
-  save() {
+  save_without_loading_indicator() {
     const changes = this.form.value;
     this.coursesService.saveCourse(this.course.id, changes).subscribe((val) => {
       this.dialogRef.close(val);
     });
+  }
+
+  save_with_loading_indicator() {
+    const changes = this.form.value;
+    const saveCourse$ = this.coursesService.saveCourse(this.course.id, changes);
+    this.loadingService
+      .showLoaderUntillCompleted(saveCourse$)
+      .subscribe((val) => {
+        this.dialogRef.close(val);
+      });
   }
 
   close() {

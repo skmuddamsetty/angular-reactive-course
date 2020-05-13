@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>{{ course.description }}</h2>
-
+<loading></loading>
 <mat-dialog-content [formGroup]="form">
   <mat-form-field>
     <input
@@ -52,7 +52,18 @@
     Close
   </button>
 
-  <button class="mat-raised-button mat-primary" #saveButton (click)="save()">
-    Save
+  <button
+    class="mat-raised-button mat-primary"
+    #saveButton
+    (click)="save_with_loading_indicator()"
+  >
+    Save with Loading indicator
+  </button>
+  <button
+    class="mat-raised-button mat-primary"
+    #saveButton
+    (click)="save_without_loading_indicator()"
+  >
+    Save W/O Loading Indicator
   </button>
 </mat-dialog-actions>
