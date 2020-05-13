@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     //     (course) => course.category == "ADVANCED"
     //   );
     // });
-    this.reloadCourses();
+    this.reloadCourses_2();
   }
 
   reloadCourses() {
@@ -62,6 +62,30 @@ export class HomeComponent implements OnInit {
       )
     );
     this.advancedCourses$ = courses$.pipe(
+      map((courses) =>
+        courses.filter((course) => course.category === "ADVANCED")
+      )
+    );
+  }
+
+  reloadCourses_2() {
+    const courses$ = this.coursesService.loadAllCourses().pipe(
+      map((courses) => courses.sort(sortCoursesBySeqNo))
+      // finalize is called when the current Observable i.e. loadAllCourses completes properly
+      // finalize(() => this.loadingService.loadingOff())
+    );
+
+    const loadCourses$ = this.loadingService.showLoaderUntillCompleted(
+      courses$
+    );
+
+    this.beginnerCourses$ = loadCourses$.pipe(
+      // returning new observable which contains the data with beginner courses using the map operator
+      map((courses) =>
+        courses.filter((course) => course.category === "BEGINNER")
+      )
+    );
+    this.advancedCourses$ = loadCourses$.pipe(
       map((courses) =>
         courses.filter((course) => course.category === "ADVANCED")
       )
