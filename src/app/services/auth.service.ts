@@ -4,6 +4,8 @@ import { User } from "../model/user";
 import { HttpClient } from "@angular/common/http";
 import { map, shareReplay, tap } from "rxjs/operators";
 
+const AUTH_DATA = "auth_data";
+
 @Injectable({
   providedIn: "root",
 })
@@ -17,6 +19,10 @@ export class AuthStore {
     console.log("AuthStore Created!");
     this.isLoggedIn$ = this.user$.pipe(map((user) => !!user));
     this.isLoggedOut$ = this.isLoggedIn$.pipe(map((loggedIn) => !loggedIn));
+    const user = localStorage.getItem(AUTH_DATA);
+    if (user) {
+      this.subject.next(JSON.parse(user));
+    }
   }
 
   login(email: string, password: string): Observable<User> {
@@ -24,11 +30,15 @@ export class AuthStore {
       .post<User>("/api/login", { email, password })
       .pipe(
         shareReplay(),
-        tap((user) => this.subject.next(user))
+        tap((user) => {
+          this.subject.next(user);
+          localStorage.setItem(AUTH_DATA, JSON.stringify(user));
+        })
       );
   }
 
   logout() {
+    localStorage.removeItem(AUTH_DATA);
     return this.subject.next(null);
   }
 }
