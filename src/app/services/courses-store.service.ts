@@ -47,4 +47,15 @@ export class CoursesStore {
     );
     this.loadingService.showLoaderUntillCompleted(loadCourses$).subscribe();
   }
+
+  saveCourse(courseId: string, changes: Partial<Course>): Observable<any> {
+    return this.http.put(`/api/courses/${courseId}`, changes).pipe(
+      catchError((err) => {
+        const message = "Could not save course!";
+        console.log(message, err);
+        this.messagesService.showErrors(message);
+        return throwError(err);
+      })
+    );
+  }
 }

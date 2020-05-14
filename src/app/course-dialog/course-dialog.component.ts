@@ -16,6 +16,7 @@ import { throwError } from "rxjs";
 import { CoursesService } from "../services/courses.service";
 import { LoadingService } from "../loading/loading.service";
 import { MessagesService } from "../messages/messages.service";
+import { CoursesStore } from "../services/courses-store.service";
 
 @Component({
   selector: "course-dialog",
@@ -34,7 +35,8 @@ export class CourseDialogComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) course: Course,
     private coursesService: CoursesService,
     private loadingService: LoadingService,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    private coursesStore: CoursesStore
   ) {
     this.course = course;
 
@@ -82,6 +84,24 @@ export class CourseDialogComponent implements AfterViewInit {
       .subscribe((val) => {
         this.dialogRef.close(val);
       });
+  }
+
+  save_with_course_store_optimistic() {
+    const changes = this.form.value;
+    this.coursesStore
+      .saveCourse(this.course.id, changes)
+      .pipe(
+        // error handling here is of no use because we close the modal on line 103 without waiting for the service to respond
+        // so this error is handled in coursesStore.saveCourse method
+        catchError((err) => {
+          const message = "Could not save course!";
+          console.log(message, err);
+          this.messagesService.showErrors(message);
+          return throwError(err);
+        })
+      )
+      .subscribe();
+    this.dialogRef.close(changes);
   }
 
   close() {
