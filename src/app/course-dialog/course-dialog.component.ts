@@ -88,6 +88,7 @@ export class CourseDialogComponent implements AfterViewInit {
 
   save_with_course_store_optimistic() {
     const changes = this.form.value;
+    console.log(changes, this.course.id);
     this.coursesStore
       .saveCourse(this.course.id, changes)
       .pipe(
