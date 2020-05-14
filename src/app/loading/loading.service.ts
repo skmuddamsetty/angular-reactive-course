@@ -8,7 +8,9 @@ export class LoadingService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$: Observable<boolean> = this.loadingSubject.asObservable();
 
-  constructor() {}
+  constructor() {
+    console.log("Loading Service Created!");
+  }
 
   showLoaderUntillCompleted<T>(obs$: Observable<T>): Observable<T> {
     // triggering the initial observable using of(null) which emits null and completes immediately

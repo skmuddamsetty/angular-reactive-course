@@ -18,6 +18,7 @@ import { CourseDialogComponent } from "../course-dialog/course-dialog.component"
 import { CoursesService } from "../services/courses.service";
 import { LoadingService } from "../loading/loading.service";
 import { MessagesService } from "../messages/messages.service";
+import { CoursesStore } from "../services/courses-store.service";
 
 @Component({
   selector: "home",
@@ -32,7 +33,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private coursesService: CoursesService,
     private loadingService: LoadingService,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    private coursesStore: CoursesStore
   ) {}
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class HomeComponent implements OnInit {
     //     (course) => course.category == "ADVANCED"
     //   );
     // });
-    this.reloadCourses_2();
+    this.reloadCourses_with_stateless_service();
   }
 
   reloadCourses() {
@@ -101,5 +103,10 @@ export class HomeComponent implements OnInit {
         courses.filter((course) => course.category === "ADVANCED")
       )
     );
+  }
+
+  reloadCourses_with_stateless_service() {
+    this.beginnerCourses$ = this.coursesStore.filterByCategory("BEGINNER");
+    this.advancedCourses$ = this.coursesStore.filterByCategory("ADVANCED");
   }
 }

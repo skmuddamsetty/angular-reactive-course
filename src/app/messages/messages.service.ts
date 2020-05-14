@@ -12,7 +12,9 @@ export class MessagesService {
     })
   );
 
-  constructor() {}
+  constructor() {
+    console.log("Messages Service Created!");
+  }
 
   showErrors(...errors: string[]) {
     this.subject.next(errors);
