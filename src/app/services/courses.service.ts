@@ -45,4 +45,10 @@ export class CoursesService {
         shareReplay()
       );
   }
+
+  loadCourseById(courseId: number): Observable<Course> {
+    return this.http
+      .get<Course>(`/api/courses/${courseId}`)
+      .pipe(shareReplay());
+  }
 }
