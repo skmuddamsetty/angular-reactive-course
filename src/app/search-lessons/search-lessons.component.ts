@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Course } from "../model/course";
@@ -28,6 +29,7 @@ import { CoursesService } from "../services/courses.service";
   selector: "course",
   templateUrl: "./search-lessons.component.html",
   styleUrls: ["./search-lessons.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchLessonsComponent implements OnInit {
   searchResults$: Observable<Lesson[]>;
