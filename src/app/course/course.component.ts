@@ -57,11 +57,18 @@ export class CourseComponent implements OnInit {
 
   ngOnInit() {
     const courseId = parseInt(this.route.snapshot.paramMap.get("courseId"));
-    this.course$ = this.coursesService.loadCourseById(courseId);
-    this.lessons$ = this.coursesService.loadCourseLessons(courseId);
+    this.course$ = this.coursesService.loadCourseById(courseId).pipe(
+      // startWith is going to emit the course observable with null for the first time and then it is going to emit the data that we got from the service
+      startWith(null)
+    );
+    this.lessons$ = this.coursesService.loadCourseLessons(courseId).pipe(
+      // startWith is going to emit the course observable with null for the first time and then it is going to emit the data that we got from the service
+      startWith([])
+    );
     // using combineLatest to combine the data of these two observables into one observable
-    // Here there is no dependency between the observables i.e. one observable do not wait for the other observable to complete.
-    // when any of the observable completes, the combinelatest method returns the data
+    // combineLatest is going to wait for both the observables to complete for the first time
+    // from second time combineLatest will return the observable with data from the observable that responds first
+    // to overcome this problem we start both the observables to emit null for the first time as shown above using startsWith(null)
     this.loadingService.loadingOn();
     this.data$ = combineLatest([this.course$, this.lessons$]).pipe(
       tap(() => this.loadingService.loadingOff()),
